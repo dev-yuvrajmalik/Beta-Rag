@@ -8,21 +8,21 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
 from typing import List
 
-# \u2500\u2500\u2500 PAGE CONFIG \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+# ─── PAGE CONFIG ────────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="MilIntelX Pro",
-    page_icon="\ud83d\udee1\ufe0f",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# \u2500\u2500\u2500 APPLE-STYLE CSS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+# ─── APPLE-STYLE CSS ─────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
   @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
-  /* \u2500\u2500 Root Variables \u2500\u2500 */
+  /* ── Root Variables ── */
   :root {
     --bg-primary:     #000000;
     --bg-secondary:   #0a0a0a;
@@ -46,7 +46,7 @@ st.markdown("""
     --font:           'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  /* \u2500\u2500 Global Reset \u2500\u2500 */
+  /* ── Global Reset ── */
   html, body, [class*="css"] {
     font-family: var(--font) !important;
     background-color: var(--bg-primary) !important;
@@ -59,16 +59,16 @@ st.markdown("""
     max-width: 1100px;
   }
 
-  /* \u2500\u2500 Hide Streamlit Chrome \u2500\u2500 */
+  /* ── Hide Streamlit Chrome ── */
   #MainMenu, footer, header { visibility: hidden; }
   .stDeployButton { display: none; }
 
-  /* \u2500\u2500 Scrollbar \u2500\u2500 */
+  /* ── Scrollbar ── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 99px; }
 
-  /* \u2500\u2500 Hero Header \u2500\u2500 */
+  /* ── Hero Header ── */
   .hero-header {
     text-align: center;
     padding: 3.5rem 0 2.5rem;
@@ -101,7 +101,7 @@ st.markdown("""
     margin: 0;
   }
 
-  /* \u2500\u2500 Status Pill \u2500\u2500 */
+  /* ── Status Pill ── */
   .status-bar {
     display: flex;
     align-items: center;
@@ -134,7 +134,7 @@ st.markdown("""
     50% { opacity: 0.4; }
   }
 
-  /* \u2500\u2500 Chat Container \u2500\u2500 */
+  /* ── Chat Container ── */
   .chat-wrapper {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -144,7 +144,7 @@ st.markdown("""
     backdrop-filter: blur(20px);
   }
 
-  /* \u2500\u2500 Chat Messages \u2500\u2500 */
+  /* ── Chat Messages ── */
   .stChatMessage {
     background: transparent !important;
     border: none !important;
@@ -161,4 +161,442 @@ st.markdown("""
   }
   [data-testid="stChatMessage"][data-testid*="user"] [data-testid="stChatMessageContent"] {
     background: var(--accent) !important;
-    border
+    border-color: transparent !important;
+  }
+
+  /* ── Chat Input ── */
+  .stChatInputContainer {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-active) !important;
+    border-radius: var(--radius-xl) !important;
+    padding: 0.15rem 0.5rem !important;
+    backdrop-filter: blur(20px);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .stChatInputContainer:focus-within {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px var(--accent-glow) !important;
+  }
+  .stChatInputContainer textarea {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    font-size: 15px !important;
+    font-family: var(--font) !important;
+  }
+  .stChatInputContainer textarea::placeholder {
+    color: var(--text-tertiary) !important;
+  }
+
+  /* ── Sidebar ── */
+  [data-testid="stSidebar"] {
+    background: rgba(10,10,10,0.95) !important;
+    border-right: 1px solid var(--border) !important;
+    backdrop-filter: blur(30px);
+  }
+  [data-testid="stSidebar"] .block-container {
+    padding: 2rem 1.25rem;
+  }
+
+  /* ── Sidebar Header ── */
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo-icon {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .sidebar-logo-text { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+  .sidebar-logo-sub  { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+
+  /* ── Section Labels ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 1.5rem 0 0.6rem;
+  }
+
+  /* ── Selectbox ── */
+  .stSelectbox [data-baseweb="select"] > div {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    font-size: 13px !important;
+    transition: border-color 0.2s ease;
+  }
+  .stSelectbox [data-baseweb="select"] > div:hover {
+    border-color: var(--border-active) !important;
+  }
+  .stSelectbox label { font-size: 12px !important; color: var(--text-secondary) !important; }
+
+  /* ── File Uploader ── */
+  [data-testid="stFileUploaderDropzone"] {
+    background: var(--bg-card) !important;
+    border: 1.5px dashed var(--border-active) !important;
+    border-radius: var(--radius-md) !important;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  [data-testid="stFileUploaderDropzone"]:hover {
+    border-color: var(--accent) !important;
+    background: rgba(0,113,227,0.05) !important;
+  }
+  [data-testid="stFileUploaderDropzone"] p {
+    color: var(--text-secondary) !important;
+    font-size: 13px !important;
+  }
+
+  /* ── Buttons ── */
+  .stButton > button {
+    background: var(--accent) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.55rem 1.1rem !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    font-family: var(--font) !important;
+    letter-spacing: -0.01em !important;
+    width: 100% !important;
+    transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease !important;
+    box-shadow: 0 2px 12px var(--accent-glow) !important;
+    cursor: pointer !important;
+  }
+  .stButton > button:hover {
+    background: var(--accent-hover) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 20px var(--accent-glow) !important;
+  }
+  .stButton > button:active {
+    transform: translateY(0) !important;
+  }
+  .stButton > button[kind="secondary"], button[data-testid*="reset"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-secondary) !important;
+    box-shadow: none !important;
+  }
+  .stButton > button[kind="secondary"]:hover {
+    border-color: var(--danger) !important;
+    color: var(--danger) !important;
+    background: rgba(255,69,58,0.06) !important;
+  }
+
+  /* ── Source Cards ── */
+  .source-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin: 6px 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: border-color 0.2s;
+  }
+  .source-card:hover { border-color: var(--border-active); }
+  .source-icon { font-size: 14px; opacity: 0.7; }
+
+  /* ── Info / Warning / Error banners ── */
+  .stAlert {
+    background: var(--bg-card) !important;
+    border-radius: var(--radius-md) !important;
+    border-left: 3px solid var(--accent) !important;
+    color: var(--text-primary) !important;
+    font-size: 13px !important;
+  }
+
+  /* ── Spinner ── */
+  .stSpinner > div { border-top-color: var(--accent) !important; }
+
+  /* ── Progress bar ── */
+  .stProgress > div > div > div { background: var(--accent) !important; border-radius: 99px !important; }
+  .stProgress > div > div { background: var(--border) !important; border-radius: 99px !important; }
+
+  /* ── Divider ── */
+  hr { border-color: var(--border) !important; margin: 1rem 0 !important; }
+
+  /* ── Tooltip Tag ── */
+  .model-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(0,113,227,0.12);
+    border: 1px solid rgba(0,113,227,0.25);
+    border-radius: 99px;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* ── Empty State ── */
+  .empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--text-tertiary);
+  }
+  .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+  .empty-state-title { font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.4rem; }
+  .empty-state-body { font-size: 14px; line-height: 1.6; }
+
+  /* ── Animations ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeInUp 0.4s ease both; }
+</style>
+""", unsafe_allow_html=True)
+
+# ─── CONSTANTS ───────────────────────────────────────────────────────────────────
+NV_KEY = st.secrets["NVIDIA_API_KEY"]
+
+EMBED_MODELS = {
+    "nv-embedqa-e5-v5 · Recommended": "nvidia/nv-embedqa-e5-v5",
+    "llama-nemotron-embed-1b-v2":      "nvidia/llama-nemotron-embed-1b-v2",
+    "llama-3.2-nv-embedqa-1b-v2":      "nvidia/llama-3.2-nv-embedqa-1b-v2",
+}
+
+CHAT_MODELS = {
+    "llama-3.1-70b · Balanced":        "meta/llama-3.1-70b-instruct",
+    "nemotron-70b · Precision":        "nvidia/llama-3.1-nemotron-70b-instruct",
+    "llama-3.1-405b · Max Power":      "meta/llama-3.1-405b-instruct",
+    "nemotron-4b · Fast":              "nvidia/nemotron-4b-instruct-v1",
+}
+
+SYSTEM_PROMPT = (
+    "You are a precise military intelligence analyst. "
+    "Answer exclusively using the provided document context. "
+    "Structure responses clearly with key findings first. "
+    "If the answer is absent from the context, state: "
+    "'This information is not available in the indexed documents.' "
+    "Never fabricate or speculate beyond what is documented."
+)
+
+
+# ─── EMBEDDINGS ──────────────────────────────────────────────────────────────────
+class NemotronEmbeddings(Embeddings):
+    """Batched NVIDIA embeddings — single API call per batch."""
+
+    BATCH_SIZE = 32  # stay well within token limits
+
+    def __init__(self, model_name: str):
+        self.url = "https://integrate.api.nvidia.com/v1/embeddings"
+        self.model = model_name
+        self.headers = {
+            "Authorization": f"Bearer {NV_KEY}",
+            "Content-Type":  "application/json",
+        }
+
+    def _call(self, texts: List[str], input_type: str) -> List[List[float]]:
+        results = []
+        for i in range(0, len(texts), self.BATCH_SIZE):
+            batch = texts[i : i + self.BATCH_SIZE]
+            payload = {
+                "input":            batch,
+                "model":            self.model,
+                "input_type":       input_type,
+                "encoding_format":  "float",
+            }
+            resp = requests.post(self.url, headers=self.headers, json=payload, timeout=60)
+            resp.raise_for_status()
+            data = resp.json()
+            # sort by index to preserve order
+            items = sorted(data["data"], key=lambda x: x["index"])
+            results.extend([item["embedding"] for item in items])
+        return results
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        return self._call(texts, "passage")
+
+    def embed_query(self, text: str) -> List[float]:
+        return self._call([text], "query")[0]
+
+
+# ─── SESSION STATE ────────────────────────────────────────────────────────────────
+def _init_state():
+    defaults = {
+        "vector_db":    None,
+        "filenames":    [],
+        "chat_history": [],
+    }
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
+
+_init_state()
+
+
+# ─── SIDEBAR ──────────────────────────────────────────────────────────────────────
+with st.sidebar:
+    # Logo
+    st.markdown("""
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">🛡️</div>
+      <div>
+        <div class="sidebar-logo-text">MilIntelX Pro</div>
+        <div class="sidebar-logo-sub">Intelligence Analysis System</div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Models
+    st.markdown('<div class="section-label">Search Engine</div>', unsafe_allow_html=True)
+    embed_label = st.selectbox(
+        "Embedding Model",
+        options=list(EMBED_MODELS.keys()),
+        label_visibility="collapsed",
+    )
+    embed_model = EMBED_MODELS[embed_label]
+
+    st.markdown('<div class="section-label">Language Model</div>', unsafe_allow_html=True)
+    chat_label = st.selectbox(
+        "Chat Model",
+        options=list(CHAT_MODELS.keys()),
+        label_visibility="collapsed",
+    )
+    chat_model = CHAT_MODELS[chat_label]
+
+    st.markdown('<div class="section-label">Knowledge Base</div>', unsafe_allow_html=True)
+
+    uploaded_files = st.file_uploader(
+        "Drop PDFs here",
+        type="pdf",
+        accept_multiple_files=True,
+        label_visibility="collapsed",
+    )
+
+    # Show already-indexed files
+    if st.session_state.filenames:
+        for fn in st.session_state.filenames:
+            st.markdown(
+                f'<div class="source-card"><span class="source-icon">📄</span>{fn}</div>',
+                unsafe_allow_html=True,
+            )
+
+    col1, col2 = st.columns(2)
+    with col1:
+        build_btn = st.button("⚡ Index", use_container_width=True)
+    with col2:
+        reset_btn = st.button("🗑 Reset", use_container_width=True)
+
+    # ── Index ──
+    if build_btn and uploaded_files:
+        new_files = [f for f in uploaded_files if f.name not in st.session_state.filenames]
+        if not new_files:
+            st.info("All files already indexed.")
+        else:
+            progress = st.progress(0, text="Reading documents…")
+            all_chunks, all_meta = [], []
+
+            for idx, file in enumerate(new_files):
+                try:
+                    reader = PdfReader(file)
+                    text = "".join(
+                        p.extract_text() or "" for p in reader.pages
+                    )
+                    if not text.strip():
+                        st.warning(f"⚠️ {file.name}: no extractable text (scanned PDF?).")
+                        continue
+                    splitter = RecursiveCharacterTextSplitter(
+                        chunk_size=900, chunk_overlap=150, length_function=len
+                    )
+                    chunks = splitter.split_text(text)
+                    all_chunks.extend(chunks)
+                    all_meta.extend([{"source": file.name}] * len(chunks))
+                    st.session_state.filenames.append(file.name)
+                except Exception as e:
+                    st.error(f"❌ {file.name}: {e}")
+
+                progress.progress(
+                    int((idx + 1) / len(new_files) * 60),
+                    text=f"Parsed {idx + 1}/{len(new_files)} files…",
+                )
+
+            if all_chunks:
+                progress.progress(70, text="Generating embeddings…")
+                try:
+                    embedder = NemotronEmbeddings(embed_model)
+                    new_db = FAISS.from_texts(all_chunks, embedder, metadatas=all_meta)
+                    if st.session_state.vector_db:
+                        st.session_state.vector_db.merge_from(new_db)
+                    else:
+                        st.session_state.vector_db = new_db
+                    progress.progress(100, text="Done.")
+                    time.sleep(0.5)
+                    progress.empty()
+                    st.success(f"✅ Indexed {len(all_chunks)} chunks from {len(new_files)} file(s).")
+                except Exception as e:
+                    st.error(f"Embedding failed: {e}")
+    elif build_btn:
+        st.warning("Upload at least one PDF first.")
+
+    # ── Reset ──
+    if reset_btn:
+        st.session_state.vector_db = None
+        st.session_state.filenames = []
+        st.session_state.chat_history = []
+        st.rerun()
+
+    # Footer
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        '<div style="font-size:11px;color:var(--text-tertiary);text-align:center;">'
+        'Powered by NVIDIA NIM · LangChain · FAISS'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+
+
+# ─── MAIN CONTENT ─────────────────────────────────────────────────────────────────
+
+# Hero
+kb_ready = st.session_state.vector_db is not None
+status_label = "Knowledge Base Active" if kb_ready else "No Documents Indexed"
+status_color = "#30d158" if kb_ready else "#6e6e73"
+
+st.markdown(f"""
+<div class="hero-header fade-in">
+  <div class="hero-eyebrow">Intelligence Analysis Platform</div>
+  <h1 class="hero-title">MilIntelX Pro</h1>
+  <p class="hero-subtitle">Upload classified documents. Ask anything. Get answers grounded in your data.</p>
+</div>
+<div class="status-bar">
+  <div class="status-pill">
+    <div class="status-dot" style="background:{status_color};box-shadow:0 0 6px {status_color};"></div>
+    {status_label}
+  </div>
+  <div class="status-pill">🧠 {chat_label.split('·')[0].strip()}</div>
+  <div class="status-pill">🔍 {embed_label.split('·')[0].strip()}</div>
+</div>
+""", unsafe_allow_html=True)
+
+# ── Chat history ──
+if st.session_state.chat_history:
+    for msg in st.session_state.chat_history:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+            if msg["role"] == "assistant" and msg.get("sources"):
+                with st.expander("📎 Sources", expanded=False):
+                    unique_sources = sorted(set(msg["sources"]))
+                    for src in unique_sources:
+                        st.markdown(
+                            f'<div class="source-card"><span class="source-icon">📄</span>{src}</div>',
+                            unsafe_allow_html=True,
+                        )
+else:
+    if not kb_ready:
+        st.ma
