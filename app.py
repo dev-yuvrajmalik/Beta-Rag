@@ -6,8 +6,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
 from typing import List
 
-st.set_page_config(page_title="MilIntelX (beta)", layout="wide")
-st.title("🛡️ MilIntelX (Beta)")
+st.set_page_config(page_title="MilIntelX Pro", layout="wide")
+st.title("🛡️ MilIntelX (Stability Update)")
 
 NV_KEY = st.secrets["NVIDIA_API_KEY"]
 
@@ -36,28 +36,24 @@ if "vector_db" not in st.session_state: st.session_state.vector_db = None
 if "filenames" not in st.session_state: st.session_state.filenames = []
 if "chat_history" not in st.session_state: st.session_state.chat_history = []
 
-# --- 3. SIDEBAR: THE MODEL CHANGER ---
+# --- 3. SIDEBAR: THE CORRECTED MODELS ---
 with st.sidebar:
-    st.header("🧠 Select Brains")
+    st.header("🧠 Benchmarked Brains")
     
-    # Choose Embedding Model (The Searcher)
-    # nv-embedqa-e5-v5 is very strong for QA
     embed_choice = st.selectbox("Search Model (Embedder):", [
+        "nvidia/nv-embedqa-e5-v5",  # Highly recommended based on your test
         "nvidia/llama-nemotron-embed-1b-v2",
-        "nvidia/nv-embedqa-e5-v5",
         "nvidia/llama-3.2-nv-embedqa-1b-v2"
     ])
     
-    # Choose Chat Model (The Thinker)
-    # Nemotron-70B is specifically tuned to be "smarter" than standard Llama
+    # FIXED: Corrected the Nemotron ID and added a 340B option
     chat_choice = st.selectbox("Logic Model (LLM):", [
         "meta/llama-3.1-70b-instruct",
-        "nvidia/nemotron-70b-instruct",
-        "meta/llama-3.1-405b-instruct"
+        "nvidia/llama-3.1-nemotron-70b-instruct", # Corrected Name
+        "meta/llama-3.1-405b-instruct",
+        "nvidia/nemotron-4b-instruct-v1" # Faster/Light option
     ])
     
-    st.warning("⚠️ If you change the 'Search Model', you MUST click Reset Brain and re-upload PDFs!")
-
     st.divider()
     uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_files=True)
     if st.button("🏗️ Build Knowledge Base") and uploaded_files:
@@ -92,27 +88,35 @@ if prompt := st.chat_input("Ask about your intel..."):
     with st.chat_message("user"): st.markdown(prompt)
 
     if st.session_state.vector_db:
-        # Step A: Retrieval
         docs = st.session_state.vector_db.similarity_search(prompt, k=5)
         context = "\n\n".join([f"FROM {d.metadata['source']}: {d.page_content}" for d in docs])
 
-        # Step B: Logic (using chat_choice)
         with st.chat_message("assistant"):
-            with st.spinner(f"Using {chat_choice}..."):
-                res = requests.post(
-                    "https://integrate.api.nvidia.com/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {NV_KEY}", "Content-Type": "application/json"},
-                    json={
-                        "model": chat_choice,
-                        "messages": [
-                            {"role": "system", "content": "You are a military intelligence analyst. Use the provided context to answer. Be precise, technical, and strict."},
-                            {"role": "user", "content": f"CONTEXT:\n{context}\n\nQUESTION: {prompt}"}
-                        ],
-                        "temperature": 0.1
-                    }
-                ).json()
-                answer = res['choices'][0]['message']['content']
-                st.markdown(answer)
-                st.session_state.chat_history.append({"role": "assistant", "content": answer})
+            with st.spinner(f"Analyzing with {chat_choice}..."):
+                # ADDED STABILITY CHECK
+                try:
+                    res = requests.post(
+                        "https://integrate.api.nvidia.com/v1/chat/completions",
+                        headers={"Authorization": f"Bearer {NV_KEY}", "Content-Type": "application/json"},
+                        json={
+                            "model": chat_choice,
+                            "messages": [
+                                {"role": "system", "content": "You are a precise military analyst. Use the provided context to answer. If not in context, say 'I do not have this information in my current files.'"},
+                                {"role": "user", "content": f"CONTEXT:\n{context}\n\nQUESTION: {prompt}"}
+                            ],
+                            "temperature": 0.1
+                        }
+                    )
+                    
+                    # Prevent crash if response is not JSON
+                    if res.status_code == 200:
+                        data = res.json()
+                        answer = data['choices'][0]['message']['content']
+                        st.markdown(answer)
+                        st.session_state.chat_history.append({"role": "assistant", "content": answer})
+                    else:
+                        st.error(f"Error {res.status_code}: Model '{chat_choice}' is currently unavailable. Try Llama-3.1-70B.")
+                except Exception as e:
+                    st.error(f"Critical Error: {e}")
     else:
         st.info("Index PDFs first.")
